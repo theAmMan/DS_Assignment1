@@ -39,6 +39,9 @@ class distQueue:
     # Add the topic to the list of the topics, and to the queue
     self.topics.append(name)
     self.queue[name] = []
+    # Create a list for the topic for Producers and Consumers
+    self.reg_prod[name]=[]
+    self.reg_cons[name]=[]
     ret_dict['status'] = "sucess"
     ret_dict["message"] = "Topic "+name+" succesfully created"
     return ret_dict 
@@ -58,11 +61,7 @@ class distQueue:
   def registerConsumer(self,topic):
     ret_dict = {}
     if topic in self.topics:
-      # Check if there are any consumers of this topic
-      if topic in self.reg_cons.keys():
-        self.reg_cons[topic].append(self.cid)
-      else:
-        self.reg_cons[topic]=[self.cid]
+      self.reg_cons[topic].append(self.cid)
       self.cid+=1
       ret_dict["consumer_id"] = self.cid-1
       return ret_dict
@@ -74,11 +73,7 @@ class distQueue:
   def registerProducer(self,topic):
     ret_dict = {}
     if topic in self.topics:
-      # Check if there id any registered producer in this topic
-      if topic in self.reg_prod.keys():
-        self.reg_prod[topic].append(self.pid)
-      else:
-        self.reg_prod[topic]=[self.pid]
+      self.reg_prod[topic].append(self.pid)
       self.pid+=1
       ret_dict["producer_id"] = self.pid-1
       return ret_dict
@@ -95,6 +90,8 @@ class distQueue:
       return ret_dict
     # Check if the producer is subscribed to this topic
     if pid not in self.reg_prod[topic]:
+      print(pid)
+      print(self.reg_prod[topic])
       ret_dict["message"] = "Error: Invalid producer"
       return ret_dict
     # Add the message to the queue
@@ -133,6 +130,8 @@ class distQueue:
   # Get the size of the queue for this topic and consumer
   def size(self,topic,cid):
     ret_dict = {}
+    print(self.topics)
+    print(topic)
     # Check if the topic exists
     if topic not in self.topics:
       ret_dict["message"] = "Error: Invalid topic"
