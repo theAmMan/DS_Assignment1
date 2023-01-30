@@ -130,13 +130,13 @@ class distQueue:
   # Get the size of the queue for this topic and consumer
   def size(self,topic,cid):
     ret_dict = {}
-    print(self.topics)
-    print(topic)
+    # print(self.topics)
+    # print(topic)
     # Check if the topic exists
     if topic not in self.topics:
       ret_dict["message"] = "Error: Invalid topic"
       return ret_dict
-    # Check if this consumer is subscribe to this topic
+    # Check if this consumer is subscribed to this topic
     if cid not in self.reg_cons[topic]:
       ret_dict["message"] = "Error: Invalid consumer"
       return ret_dict

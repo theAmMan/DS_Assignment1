@@ -1,5 +1,10 @@
 from django.db import models 
 
+class ids(models.Model):
+    #we need to store which pids are used
+    cid = models.PositiveIntegerField()
+    pid = models.PositiveIntegerField()
+
 class Topic(models.Model):
     #model for the topic
     topic_name = models.CharField(max_length = 200)
@@ -11,13 +16,13 @@ class Topic(models.Model):
 class Producer(models.Model):
     #Model for the producer
     subscribed_topic = models.ForeignKey(Topic, related_name = 'topic',on_delete = models.CASCADE)
-    id = models.PositiveIntegerField(default = 1)
+    pid = models.PositiveIntegerField()
 
 class Consumer(models.Model):
     #Model for the consumer
-    id = models.PositiveIntegerField(default = 1)
+    cid = models.PositiveIntegerField()
     subscriptions = models.ManyToManyField(Topic, through = 'ConsumerSubscriptions')
-    views = models.ManyToManyField(LogMessage, through = 'ConsumerViews')
+    views = models.ManyToManyField(LogMessage, through = 'ConsumerViews', on_delete = models.CASCADE)
 
 class ConsumerSubscriptions(models.Model):
     #To store which consumer is subscribed to which topic
@@ -27,6 +32,7 @@ class ConsumerSubscriptions(models.Model):
 class LogMessage(models.Model):
     message = models.CharField(max_length = 200)
     created = models.DateTimeField(auto_now_add = True)
+    prod = models.ForeignKey(Producer,related_name = 'prod', on_delete = models.CASCADE)
 
     topic_name = models.ForeignKey(Topic, related_name = 'topic_name', on_delete = models.CASCADE)
 
