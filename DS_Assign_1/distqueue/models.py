@@ -14,7 +14,7 @@ class Producer(models.Model):
     pid = models.PositiveIntegerField()
 
 class LogMessage(models.Model):
-    message = models.CharField(max_length = 200)
+    message = models.TextField()
     created = models.DateTimeField(auto_now_add = True)
     prod = models.ForeignKey(Producer,related_name = 'prod', on_delete = models.CASCADE)
 
