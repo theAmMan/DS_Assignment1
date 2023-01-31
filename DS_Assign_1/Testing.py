@@ -58,18 +58,18 @@ def consumer_func(q, consumer_id, topics : list, id_dict : dict):
     
     while True:
         for topic in topics:
-            time.sleep(10)
+            time.sleep(1)
             log = q.dequeue(topic, id_dict[topic])["message"]
             if log is not None:
                 log_file.write(log)
 
 def producer_func(q, producer_id, id_dict : dict):
-    file_name = "../test_asgn1/producer_" + str(producer_id) + ".txt.txt"
+    file_name = "../test_asgn1/producer_" + str(producer_id) + ".txt"
     log_file = open(file_name, "r")
 
     for log in log_file:
         sleep_time = randint(20,60) / 60
-        time.sleep(sleep_time*20)
+        time.sleep(sleep_time*2)
         topic = log.split()[3]
         q.enqueue(topic, id_dict[topic], log)
 
@@ -104,23 +104,3 @@ t5.join()
 t6.join()
 t7.join()
 t8.join()
-
-# q.registerConsumer("T-1")
-# q.registerProducer("T-2")
-# q.registerProducer("T-3")
-# q.enqueue("Esha Chutiya hai 1", 5, "Enjoy2!")
-# q.enqueue("Esha Chutiya hai 1", 5, "Enjoy3!")
-# # q.dequeue("Esha Chutiya hai 1", 9)
-
-# q.size("Esha Chutiya hai 1", 9)
-
-# t1 = threading.Thread(target=producer_func, args=(1,['T-1', 'T-2', 'T-3']))
-# t2 = threading.Thread(target=producer_func, args=(2,['T-1', 'T-3']))
-# t3 = threading.Thread(target=producer_func, args=(3,['T-1']))
-# t4 = threading.Thread(target=producer_func, args=(4,['T-2']))
-# t5 = threading.Thread(target=producer_func, args=(5,['T-1', 'T-2', 'T-3']))
-
-
-# t6 = threading.Thread(target=consumer_func, args=(1,['T-1', 'T-2', 'T-3']))
-# t7 = threading.Thread(target=consumer_func, args=(2,['T-1', 'T-3']))
-# t8 = threading.Thread(target=consumer_func, args=(3,['T-1', 'T-2', 'T-3']))
