@@ -1,2 +1,2 @@
 djangorestframework
-psycopyg2
+psycopg2
