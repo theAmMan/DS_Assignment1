@@ -30,7 +30,7 @@ The Queue for maintaining the log messages is implemented in the file distQueue.
 
 ## Part B
 We have added persistence to the distributed queue, so that log messages are stored in a persistent storage layer and can be retrieved even if the server crashes or restarts.  
-Database is implemented using PostGRESQL (currently SQLite). Django handles all the low level detail communication with the Database. There are multiple models(tables) for Topics, Producers, Consumers, LogMessages. There are two other linking tables which link consumers with their subscriptions (Consumer Subscriptions) and log messages to the consumers who viewed the messages (consumerViews).
+Database is implemented using PostGRESQL. Django handles all the low level detail communication with the Database. There are multiple models(tables) for Topics, Producers, Consumers, LogMessages. There are two other linking tables which link consumers with their subscriptions (Consumer Subscriptions) and log messages to the consumers who viewed the messages (consumerViews).
 
 ## Part C
 We created a Python library which acts as an abstraction using which producers and consumers can communicate with our distributed logging queue using a more convenient or efficient interface.  
