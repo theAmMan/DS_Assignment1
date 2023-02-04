@@ -5,7 +5,7 @@ from distQueue import distQueue
 mesgQ = distQueue()
 
 def Topics(request):
-    # print("Heeyyy thereee")
+    print("Heeyyy thereee")
     if request.method == 'GET':
         # return JsonResponse({'status':'bar'})
         final_resp = mesgQ.listTopics()
@@ -59,14 +59,14 @@ def enqueue(request):
         # Check if valid parameters
         if request.POST.get('message') == None:
             final_resp["message"] = "No key 'message' found in the POST method"
-            return final_resp
+            return JsonResponse(final_resp)
         if request.POST.get('topic_name') == None:
             final_resp["message"] = "No key 'topic_name' found in the POST method"
-            return final_resp
+            return JsonResponse(final_resp)
         if request.POST.get('producer_id') == None:
             final_resp["message"] = "No key 'producer_id' found in the POST method"
-            return final_resp
-        #Add the log message to the queue
+            return JsonResponse(final_resp)
+        # Add the log message to the queue
         # print(request.POST.get('topic_name'),request.POST.get('producer_id'))
         final_resp = mesgQ.enqueue(request.POST.get('topic_name'),request.POST.get('producer_id'),request.POST.get('message'))
         return JsonResponse(final_resp)
@@ -80,10 +80,10 @@ def dequeue(request):
         # Check if valid parameters
         if request.GET.get('topic_name') == None:
             final_resp["message"] = "No key 'topic_name' found in the GET method"
-            return final_resp
+            return JsonResponse(final_resp)
         if request.GET.get('consumer_id') == None:
             final_resp["message"] = "No key 'consumer_id' found in the GET method"
-            return final_resp
+            return JsonResponse(final_resp)
         #Remove and return the log message from the queue
         final_resp = mesgQ.dequeue(request.GET.get('topic_name'),request.GET.get('consumer_id'))
         return JsonResponse(final_resp)
@@ -98,10 +98,10 @@ def size(request):
         # Check if valid parameters
         if request.GET.get('topic_name') == None:
             final_resp["message"] = "No key 'topic_name' found in the GET method"
-            return final_resp
+            return JsonResponse(final_resp)
         if request.GET.get('consumer_id') == None:
             final_resp["message"] = "No key 'consumer_id' found in the GET method"
-            return final_resp
+            return JsonResponse(final_resp)
         #Return the number of log messages in the requested topic for the consumer
         final_resp = mesgQ.size(request.GET.get('topic_name'),request.GET.get('consumer_id'))
         return JsonResponse(final_resp)

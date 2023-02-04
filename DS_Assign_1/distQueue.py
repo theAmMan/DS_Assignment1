@@ -62,8 +62,8 @@ class distQueue:
     ret_dict = {}
     if topic in self.topics:
       self.reg_cons[topic].append(self.cid)
+      ret_dict["consumer_id"] = self.cid
       self.cid+=1
-      ret_dict["consumer_id"] = self.cid-1
       return ret_dict
     # If the topic is not present in the queue
     ret_dict["message"] = "Error: Topic does not exist"
@@ -72,15 +72,24 @@ class distQueue:
   # Register Producer
   def registerProducer(self,topic):
     ret_dict = {}
-    if topic in self.topics:
-      self.reg_prod[topic].append(self.pid)
-      self.pid+=1
-      ret_dict["producer_id"] = self.pid-1
+    # CHeck if topic is valid
+    if topic == '':
+      ret_dict["message"] = "Error: Topic name cannot be blank"
       return ret_dict
     # If the topic is not present in the queue
-    ret_dict["message"] = "Error: Topic does not exist"
+    if topic not in self.topics:
+      # Add the topic to the list of the topics, and to the queue
+      self.topics.append(topic)
+      self.queue[topic] = []
+      # Create a list for the topic for Producers and Consumers
+      self.reg_prod[topic]=[]
+      self.reg_cons[topic]=[]
+    
+    self.reg_prod[topic].append(self.pid)
+    ret_dict["producer_id"] = self.pid
+    self.pid+=1
     return ret_dict
-  
+    
   # Enqueue
   def enqueue(self,topic, pid, message):
     ret_dict = {}
@@ -90,8 +99,9 @@ class distQueue:
       return ret_dict
     # Check if the producer is subscribed to this topic
     if pid not in self.reg_prod[topic]:
-      print(pid)
       print(self.reg_prod[topic])
+      print(pid)
+      # print(self.reg_prod[topic])
       ret_dict["message"] = "Error: Invalid producer"
       return ret_dict
     # Add the message to the queue
@@ -116,9 +126,10 @@ class distQueue:
         self.queue[topic][i][2].append(cid)
         self.queue[topic][i][2].sort()
         message = self.queue[topic][i][1]
-        # If the message has been seen by all consumers the message is removed from the queue
-        if(self.queue[topic][i][2]==self.reg_cons[topic]):
-          self.queue[topic].pop(i)
+        # Design decision : We keep track of all previous messages and do not remove them from the database
+        # # If the message has been seen by all consumers the message is removed from the queue
+        # if(self.queue[topic][i][2]==self.reg_cons[topic]):
+        #   self.queue[topic].pop(i)
         break
     # All available messages has already been sent to this consumer
     if message == '':
@@ -130,13 +141,13 @@ class distQueue:
   # Get the size of the queue for this topic and consumer
   def size(self,topic,cid):
     ret_dict = {}
-    print(self.topics)
-    print(topic)
+    # print(self.topics)
+    # print(topic)
     # Check if the topic exists
     if topic not in self.topics:
       ret_dict["message"] = "Error: Invalid topic"
       return ret_dict
-    # Check if this consumer is subscribe to this topic
+    # Check if this consumer is subscribed to this topic
     if cid not in self.reg_cons[topic]:
       ret_dict["message"] = "Error: Invalid consumer"
       return ret_dict
